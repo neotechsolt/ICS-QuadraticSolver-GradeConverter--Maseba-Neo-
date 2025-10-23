@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT251 - Web Technologies Assignment</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 2em;
+            background-color: #ffd562;
+        }
+        h1, h2 {
+            color: #858e5a;
+            text-align: center;
+        }
+        .container {
+           background: #cec77b;
+            padding: 2em;
+            margin-bottom: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 0.5em;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #412323;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #cbdf78;
+            color: rgb(164, 147, 79);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #53caa2;
+        }
+        .result {
+            margin-top: 1em;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #adc546;
+            height: 150px;
+            width: 300px;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Web Technologies Assignment</h1>
+    
+    
+    
+        <!-- Student Info -->
+         <div class="student-info">
+         <h2>Student Information</h2>
+         <form id="studentForm">
+         <label>Student ID:</label>
+         <input type="text" id="studentId" placeholder="e.g., 202407198">
+         <label>Name:</label>
+         <input type="text" id="studentName" placeholder="e.g., maseba neo">
+         </form>
+  </div>
+         <!-- Quadratic Solver Section -->
+          <div class="container">
+        <h2>1. Quadratic Equation Solver (-b ± (√b²-4ac)/2a)</h2>
+        <div class="form-group">
+            <label for="a">Enter value for 'a' (a ≠ 0):</label>
+            <input type="number" id="a" step="any" placeholder="num i.e 2,3, & 5" required>
+            <p id="a-error" class="error"></p>
+        </div>
+        <div class="form-group">
+            <label for="b">Enter value for 'b':</label>
+            <input type="number" id="b" step="any" placeholder="num i.e 1,4, & 5"reqired>
+        </div>
+        <div class="form-group">
+            <label for="c">Enter value for 'c':</label>
+            <input type="number" id="c" step="any" placeholder="num i.e 2,6, & 8">
+        </div>
+        <button onclick="solveQuadratic()">Solve</button>
+        <button onclick="resetQuadratic()">Reset</button>
+        <div id="quadratic-result" class="result"></div>
+    </div>
+
+    <!-- Grading System Section -->
+    <div class="container">
+        <h2>2. Grading System</h2>
+        <div class="form-group">
+            <label for="score">Enter the marks for the student (0-100):</label>
+            <input type="number" id="score" min="0" max="100" placeholder="86%" required>
+            <p id="score-error" class="error"></p>
+        </div>
+        <button onclick="calculateGrade()">Calculate Grade</button>
+        <button onclick="resetGrade()">Reset</button>
+        <div id="grade-result" class="result"></div>
+    </div>
+
+    <script>
+        // JavaScript for Quadratic Solver (Task 1)
+        function solveQuadratic() {
+            // Clear previous errors and results
+            document.getElementById('a-error').textContent = '';
+            document.getElementById('quadratic-result').textContent = '';
+            
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+
+            // Validation: 'a' cannot be zero and all inputs must be numbers
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                document.getElementById('a-error').textContent = 'Please enter valid numbers for a, b, and c.';
+                return;
+            }
+            if (a === 0) {
+                document.getElementById('a-error').textContent = 'The value of "a" cannot be zero.';
+                return;
+            }
+
+            const discriminant = b * b - 4 * a * c;
+            let resultText = "Discriminant (D): " + discriminant.toFixed(2);
+
+            if (discriminant > 0) {
+                const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                resultText += "<br>Nature of roots: Two distinct real roots.";
+                resultText += `<br>Root 1: ${root1.toFixed(2)}<br>Root 2: ${root2.toFixed(2)}`;
+            } else if (discriminant === 0) {
+                const root = -b / (2 * a);
+                resultText += "<br>Nature of roots: One real repeated root.";
+                resultText += `<br>Root: ${root.toFixed(2)}`;
+            } else {
+                const realPart = (-b / (2 * a)).toFixed(2);
+                const imagPart = (Math.sqrt(-discriminant) / (2 * a)).toFixed(2);
+                resultText += "<br>Nature of roots: Two complex conjugate roots.";
+                resultText += `<br>Root 1: ${realPart} + ${imagPart}i<br>Root 2: ${realPart} - ${imagPart}i`;
+            }
+
+            document.getElementById('quadratic-result').innerHTML = resultText;
+        }
+
+        function resetQuadratic() {
+            document.getElementById('a').value = '';
+            document.getElementById('b').value = '';
+            document.getElementById('c').value = '';
+            document.getElementById('a-error').textContent = '';
+            document.getElementById('quadratic-result').textContent = '';
+        }
+
+        // JavaScript for Grading System (Task 2)
+        function calculateGrade() {
+            // Clear previous errors and results
+            document.getElementById('score-error').textContent = '';
+            document.getElementById('grade-result').textContent = '';
+
+            const score = parseInt(document.getElementById('score').value);
+
+            // Validation: only numbers in [0, 100]
+            if (isNaN(score) || score < 0 || score > 100) {
+                document.getElementById('score-error').textContent = 'Please enter a valid numeric score between 0 and 100.';
+                return;
+            }
+
+            let grade;
+            if (score >= 85) {
+                grade = "A+";
+            } else if (score >= 75) {
+                grade = "A";
+            } else if (score >= 65) {
+                grade = "B+";
+            } else if (score >= 60) {
+                grade = "B";
+            } else if (score >= 55) {
+                grade = "C+";
+            } else if (score >= 50) {
+                grade = "C wa clear we chipondo!!!";
+            } else {
+                grade = "D";
+            }
+
+            document.getElementById('grade-result').textContent = `Score ${score} → Grade ${grade}`;
+        }
+
+        function resetGrade() {
+            document.getElementById('score').value = '';
+            document.getElementById('score-error').textContent = '';
+            document.getElementById('grade-result').textContent = '';
+        }
+    </script>
+
+</body>
+</html>
